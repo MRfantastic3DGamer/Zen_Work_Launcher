@@ -1,5 +1,15 @@
-package com.example.launcher.models
+package com.models
 
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-data class App(var name: String, var icon: Painter, var packageName: String)
+@Entity(tableName = "apps")
+data class App(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val name: String,
+    val icon: Painter,
+    val packageName: String,
+    val noOfTimesOpened: Int,
+)

@@ -6,10 +6,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import com.example.launcher.Drawing.DrawablePainter
-import com.example.launcher.models.App
+import com.models.App
 import com.example.launcher.models.AppButtonData
 import com.example.launcher.models.FolderButtonData
-import com.example.launcher.models.HexAction
+import com.models.HexAction
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
@@ -21,14 +21,18 @@ fun getAllAppsFromPackageManager(pm : PackageManager) : MutableList<App>{
 
     val installedApps: MutableList<App> = ArrayList()
 
+    var id = 0
     for (app in appsL)
     {
         val saveApp = App(
+            id,
             app.loadLabel(pm) as String,
             DrawablePainter(app.loadIcon(pm)),
-            app.activityInfo.packageName
+            app.activityInfo.packageName,
+            0,
         )
         installedApps.add(saveApp)
+        id++
     }
     installedApps.sortBy { it.name }
 
@@ -60,7 +64,7 @@ fun getFoldersFromMemory(){
     // TODO:
 }
 
-fun getAllFolderButtons(startingIndex: Int, folders: MutableMap<String, MutableList<App>>, separation: Int,buttonSize: Dp,rowSize: Int): MutableList<FolderButtonData> {
+fun getAllFolderButtons(startingIndex: Int, folders: MutableMap<String, MutableList<App>>, separation: Int, buttonSize: Dp, rowSize: Int): MutableList<FolderButtonData> {
     val buttons : MutableList<FolderButtonData> = mutableListOf()
     var position: Array<Float>
     var i = startingIndex
@@ -74,7 +78,7 @@ fun getAllFolderButtons(startingIndex: Int, folders: MutableMap<String, MutableL
     return buttons
 }
 
-fun getAllAppButtons(startingIndex:Int, apps: MutableList<App>, separation: Int,buttonSize: Dp,rowSize: Int): MutableList<AppButtonData> {
+fun getAllAppButtons(startingIndex:Int, apps: MutableList<App>, separation: Int, buttonSize: Dp, rowSize: Int): MutableList<AppButtonData> {
     val buttons : MutableList<AppButtonData> = mutableListOf()
     var position: Array<Float>
     var i = startingIndex

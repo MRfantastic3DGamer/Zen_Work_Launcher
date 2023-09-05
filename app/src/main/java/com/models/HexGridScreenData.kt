@@ -1,4 +1,7 @@
-package com.example.launcher.models
+package com.models
+
+import com.example.launcher.models.AppButtonData
+import com.example.launcher.models.FolderButtonData
 
 data class HexGridScreenData(
     var apps         : MutableList<AppButtonData>,

@@ -1,12 +1,10 @@
 package com.example.launcher.Screens
 
-import android.content.pm.PackageManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,12 +18,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
-import com.example.launcher.Buttons.AppHex
-import com.example.launcher.Buttons.FolderHex
+import com.Buttons.AppHex
+import com.Buttons.FolderHex
 import com.example.launcher.Functions.positionToIndex
 import com.example.launcher.models.AppButtonData
 import com.example.launcher.models.FolderButtonData
-import com.example.launcher.models.HexAction
 
 @Composable
 fun HexGridScreen(
@@ -59,6 +56,7 @@ fun HexGridScreen(
         .background(bgBrush)
         .pointerInput(Unit) {
             detectDragGestures { change, dragAmount ->
+                change.consume()
                 offsetX.value += dragAmount.x * 1.5F
                 offsetY.value += dragAmount.y * 1.5F
             }
@@ -98,13 +96,9 @@ fun HexGridScreen(
                 sideLength = buttonSize,
                 oX = folder.posX + offsetX.value,
                 oY = folder.posY + offsetY.value * 0.47F,
-                folderName = folder.folderName)
+                folderName = folder.folderName
+            )
         }
-        Text(text = "${offsetX.value}",
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset { IntOffset(0, (3500 + offsetY.value).toInt()) }
-                .background(Color.Green))
     }
 }
 
