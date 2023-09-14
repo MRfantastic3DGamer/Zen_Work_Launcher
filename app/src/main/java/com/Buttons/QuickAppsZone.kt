@@ -76,10 +76,9 @@ fun QuickAppsZone(
                 )
             }
     ){
-        Column {
-            Text(text = "selected : $selected")
-            Text(text = "currentAngle : $currentAngle")
-        }
+
+        content?.invoke()
+
         if(quickAppsOpened){
             for (i in 0 until numberOfApps){
                 Box (
@@ -98,8 +97,6 @@ fun QuickAppsZone(
                 }
             }
         }
-
-        content?.invoke()
     }
 }
 

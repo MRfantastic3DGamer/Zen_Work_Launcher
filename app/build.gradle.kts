@@ -1,9 +1,9 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp") version "1.5.30-1.0.0"
+    id("com.google.devtools.ksp")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -21,6 +21,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments(
+                    mapOf(
+                        "dagger.gradle.incremental" to "true",
+                        "room.incremental" to "true"
+                    )
+                )
+            }
+        }
     }
 
     buildTypes {
@@ -33,11 +44,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -62,6 +73,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.room:room-common:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -70,11 +83,29 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // system ui
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.2-alpha")
 
     // Room
-    implementation("androidx.room:room-runtime:2.5.2")
-    ksp("androidx.room:room-compiler:2.5.2")
-    implementation("androidx.room:room-ktx:2.5.2")
+    val room_version = "2.5.2"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    // To use Kotlin annotation processing tool (kapt)
+    ksp("androidx.room:room-compiler:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+    ksp("androidx.room:room-compiler:$room_version")
+    // Kotlin Extensions and Coroutines support for Room
+    implementation ("androidx.room:room-ktx:2.5.2")
+
+
+    // HILT
+    val hilt = "2.45"
+    implementation ("com.google.dagger:hilt-android:$hilt")
+    implementation ("com.google.dagger:hilt-android-gradle-plugin:$hilt")
+    ksp ("com.google.dagger:hilt-compiler:$hilt")
+    ksp ("com.google.dagger:hilt-android-compiler:$hilt")
+    // For instrumentation tests
+    androidTestImplementation  ("com.google.dagger:hilt-android-testing:$hilt")
+    kaptAndroidTest ("com.google.dagger:hilt-compiler:$hilt")
+    // For local unit tests
+    testImplementation ("com.google.dagger:hilt-android-testing:$hilt")
+    kaptTest ("com.google.dagger:hilt-compiler:$hilt")
 }
