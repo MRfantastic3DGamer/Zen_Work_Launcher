@@ -1,10 +1,10 @@
-package com.zenworklauncher.widgets.schedule.data.source.local
+package com.zenworklauncher.widgets.screans.schedule.data.source.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.zenworklauncher.widgets.schedule.model.Task
+import com.zenworklauncher.widgets.screans.schedule.model.Task
 
 @Database(entities = [Task::class], version = 2, exportSchema = false)
 abstract class TasksDatabase : RoomDatabase() {

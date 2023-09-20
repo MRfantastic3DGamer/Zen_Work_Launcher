@@ -1,8 +1,8 @@
-package com.zenworklauncher.widgets.schedule.data
+package com.zenworklauncher.widgets.screans.schedule.data
 
 import androidx.lifecycle.MutableLiveData
-import com.zenworklauncher.widgets.schedule.data.source.local.TaskDao
-import com.zenworklauncher.widgets.schedule.model.Task
+import com.zenworklauncher.widgets.screans.schedule.data.source.local.TaskDao
+import com.zenworklauncher.widgets.screans.schedule.model.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +23,12 @@ class TaskRepository(private val tasksDao: TaskDao) {
     fun updateTask(task: Task){
         coroutineScope.launch(Dispatchers.IO) {
             tasksDao.updateTask(task)
+        }
+    }
+
+    fun upsertTask(task: Task){
+        coroutineScope.launch(Dispatchers.IO) {
+            tasksDao.upsertTask(task)
         }
     }
 

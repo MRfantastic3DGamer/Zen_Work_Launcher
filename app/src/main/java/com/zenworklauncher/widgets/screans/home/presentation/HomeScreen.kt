@@ -1,4 +1,4 @@
-package com.Screens
+package com.zenworklauncher.widgets.screans.home.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,14 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.Buttons.QuickAppsZone
 
 @Composable
 fun HomeScreen() {
-    QuickAppsZone(
-        modifier = Modifier,
-        numberOfApps = 10,
-    ){
         LazyColumn(
             content = {
             items(10) {
@@ -36,5 +31,5 @@ fun HomeScreen() {
             },
             contentPadding = PaddingValues(10.dp)
         )
-    }
+
 }

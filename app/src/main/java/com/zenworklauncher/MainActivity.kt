@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zenworklauncher.ui.theme.ZenWorkLauncherTheme
-import com.zenworklauncher.widgets.schedule.presentation.TasksWidget
+import com.zenworklauncher.widgets.presentation.WidgetsScreens
 
 class MainActivity : ComponentActivity() {
 
@@ -63,7 +63,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 )
                 {
-                    TasksWidget()
+                    WidgetsScreens()
+//                    TasksWidget()
 //                    HomeScreen()
 //                    HexGridScreen(
 //                        appButtons = appButtons,

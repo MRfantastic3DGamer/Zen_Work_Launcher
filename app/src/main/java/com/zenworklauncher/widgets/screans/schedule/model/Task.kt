@@ -1,4 +1,4 @@
-package com.zenworklauncher.widgets.schedule.model
+package com.zenworklauncher.widgets.screans.schedule.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
