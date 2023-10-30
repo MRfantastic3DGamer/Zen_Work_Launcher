@@ -32,7 +32,6 @@ fun ScheduleWidget(
                 .fillMaxSize()
                 .padding(10.dp)
         ){
-            DayTimeVisual(screenHeight = screenHeight)
             TasksLayout(
                 tasks = viewModel.tasksUiState.items,
                 content = {
@@ -49,6 +48,9 @@ fun ScheduleWidget(
                         )
                     }
                 }
+            )
+            DayTimeVisual(
+                screenHeight = screenHeight
             )
         }
         TaskEditor(

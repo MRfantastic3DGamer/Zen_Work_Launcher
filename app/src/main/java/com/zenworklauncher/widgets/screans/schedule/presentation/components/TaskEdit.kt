@@ -58,6 +58,7 @@ fun TaskEditor(
                 )
             }, mHour, mMinute, false
         )
+
         val alarmTimePickerDialog = TimePickerDialog(
             context,
             {_, mHour : Int, mMinute: Int ->
@@ -69,67 +70,62 @@ fun TaskEditor(
             }, mHour, mMinute, false
         )
 
+        Column(
+            modifier = modifier
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color.Black.copy(alpha = 0.1f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
+        {
             Column(
-                modifier = modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color.Black.copy(alpha = 0.1f)),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            )
-            {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    TextField(
-                        value = name,
-                        onValueChange = {
-                            viewModel.tasksUiState = viewModel.tasksUiState.copy(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                TextField(
+                    value = name,
+                    onValueChange = {
+                        viewModel.tasksUiState = viewModel.tasksUiState.copy(
+                            currentEditedTask = viewModel.tasksUiState.currentEditedTask.copy(
+                                name = it
+                            )
+                        ) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp)),
+                    trailingIcon = {
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = "title") },
+                    singleLine = true,
+                    label = {
+                        Text(
+                            "Title"
+                        )
+                    }
+                )
+                TextField(
+                    value = description,
+                    onValueChange = {
+                        viewModel.tasksUiState =
+                            viewModel.tasksUiState.copy(
                                 currentEditedTask = viewModel.tasksUiState.currentEditedTask.copy(
-                                    name = it
+                                    description = it
                                 )
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp)),
-                        trailingIcon = {
-                            Icon(imageVector = Icons.Default.Edit, contentDescription = "title")
-                        },
-                        singleLine = true,
-                        label = {
-                            Text(
-                                "Title"
-                            )
-                        }
-                    )
-                    TextField(
-                        value = description,
-                        onValueChange = {
-                            viewModel.tasksUiState =
-                                viewModel.tasksUiState.copy(
-                                    currentEditedTask = viewModel.tasksUiState.currentEditedTask.copy(
-                                        description = it
-                                    )
-                                )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp)),
-                        trailingIcon = {
-                            Icon(imageVector = Icons.Default.Edit, contentDescription = "title")
-                        },
-                        singleLine = true,
-                        label = {
-                            Text(
-                                "Description"
-                            )
-                        }
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                    ) {
+                            ) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp)),
+                    trailingIcon = {
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = "title") },
+                    singleLine = true,
+                    label = {
+                        Text(
+                            "Description"
+                        )
+                    }
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,) {
                         TextButton(onClick = { notificationTimePickerDialog.show() }) {
                             Text(text = "notification at $notificationTime")
                         }

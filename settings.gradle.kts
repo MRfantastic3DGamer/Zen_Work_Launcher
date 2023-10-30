@@ -15,4 +15,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "ZenWork Launcher"
 include(":app")
- 
+include(":radial-quick-actions")
+include(":quick-apps")
+include(":home-page")

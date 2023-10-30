@@ -8,13 +8,13 @@ import androidx.lifecycle.ViewModel
 import com.zenworklauncher.widgets.utils.WidgetsScreenType
 
 class WidgetsScreenViewModel : ViewModel() {
-    var currentScreen : WidgetsScreenType by mutableStateOf(WidgetsScreenType.Schedule)
+    var currentScreen : WidgetsScreenType by mutableStateOf(WidgetsScreenType.Home)
     var currentScreenOffset: IntOffset by mutableStateOf(HomeOffset)
     val screenVisibility: Map<WidgetsScreenType,Boolean> by mutableStateOf(
         mapOf(
             pairs = arrayOf(
-                WidgetsScreenType.Home to false,
-                WidgetsScreenType.Schedule to true,
+                WidgetsScreenType.Home to true,
+                WidgetsScreenType.Schedule to false,
                 WidgetsScreenType.Entertainment to false,
             )
         )
