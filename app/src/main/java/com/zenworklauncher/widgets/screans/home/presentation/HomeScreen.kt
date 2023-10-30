@@ -413,6 +413,7 @@ fun HomeScreen(
                     fontSize = TextUnit(35f, TextUnitType.Sp)
                 )
             )
+
             Box(modifier = Modifier.height(100.dp))
             Row(
                 modifier = Modifier
