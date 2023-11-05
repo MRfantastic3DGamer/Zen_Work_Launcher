@@ -110,10 +110,10 @@ dependencies {
     testImplementation ("com.google.dagger:hilt-android-testing:$hilt")
     kaptTest ("com.google.dagger:hilt-compiler:$hilt")
 
-    // cloudy for blurr efect (https://github.com/skydoves/Cloudy)
-    // TODO: get license
-    implementation ("com.github.skydoves:cloudy:0.1.2")
+    // my packages
     implementation (project(":radial-quick-actions"))
     implementation (project(":quick-apps"))
 
+    // datastore
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 }
