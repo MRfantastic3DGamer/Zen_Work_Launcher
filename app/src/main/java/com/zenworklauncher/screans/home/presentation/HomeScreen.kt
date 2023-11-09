@@ -56,6 +56,7 @@ import com.dhruv.radial_quick_actions.model.QuickAction
 import com.dhruv.radial_quick_actions.presentation.RadialQuickActionTrigger
 import com.dhruv.radial_quick_actions.presentation.RadialQuickActionVisual
 import com.zenworklauncher.R
+import com.zenworklauncher.preffsDatabase.SettingsValues
 import com.zenworklauncher.screans.home.HomeViewModel
 import com.zenworklauncher.screans.home.model.AppData
 import kotlin.math.PI
@@ -66,8 +67,8 @@ class HomeQuickAction(name: String, onSelect: ()->Unit ) : QuickAction(name, onS
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier.fillMaxSize(),
-    viewModel: HomeViewModel
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel,
 ) {
 
     val selectedYOffset by animateFloatAsState(targetValue = viewModel.quickAppsViewModel.getSelectedStringYOffset, label = "selected-string-Y-offset")
@@ -106,7 +107,11 @@ fun HomeScreen(
             Box {
                 QuickAppsTrigger(
                     modifier = Modifier
-                        .size(50.dp, 490.dp), viewModel = viewModel.quickAppsViewModel
+                        .size(
+                            SettingsValues.getDp(SettingsValues.AppsView.AppsViewKeys.labelWidth),
+                            SettingsValues.getDp(SettingsValues.AppsView.AppsViewKeys.height)
+                        ),
+                    viewModel = viewModel.quickAppsViewModel
                 )
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -114,7 +119,7 @@ fun HomeScreen(
     }
 
     @Composable
-    fun blurredBG(blurAmount: Dp, image:Int){
+    fun blurredBG(blurAmount: Dp, image:Int, tintKey: SettingsValues.AppsView.AppsViewKeys){
         Image(
             modifier = Modifier
                 .fillMaxSize()
@@ -178,7 +183,7 @@ fun HomeScreen(
         return points
     }
 
-    fun alphabetsBackGroundPath(Size: IntSize, offset: IntOffset, radius: Float, selectionOffset: Float, selectionRadius: Float, boxMargin: Float = 10f): Path{
+    fun alphabetsBackGroundPath(Size: IntSize, offset: IntOffset, selectionOffset: Float, selectionRadius: Float, boxMargin: Float = 10f): Path{
 
         val topLeft = offset.toOffset() + Offset(0f, -boxMargin)
         val topRight = offset.toOffset() + Offset(Size.width.toFloat(), 0f) + Offset(0f, -boxMargin - selectionRadius)
@@ -256,9 +261,13 @@ fun HomeScreen(
 
     @Composable
     fun alphabetsSide(size: IntSize, offset: IntOffset, highLiteRadius: Float){
-        val path = alphabetsBackGroundPath(size, offset,10f, selectedYOffset, highLiteRadius)
+        val path = alphabetsBackGroundPath(
+            size,
+            offset,
+            selectedYOffset,
+            highLiteRadius
+        )
         val shape = pathToShape(path)
-
 
         Box(modifier = Modifier
             .fillMaxSize()
@@ -266,7 +275,7 @@ fun HomeScreen(
         )
         {
 
-            blurredBG(20.dp, R.drawable.wallpaper)
+            blurredBG(20.dp, R.drawable.wallpaper, SettingsValues.AppsView.AppsViewKeys.labelBGTint)
 
             Box(
                 modifier = Modifier
@@ -303,7 +312,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .clip(iconsShape),
         ){
-            blurredBG(30.dp, R.drawable.wallpaper)
+            blurredBG(30.dp, R.drawable.wallpaper, SettingsValues.AppsView.AppsViewKeys.iconBGTint)
 
             Box(
                 modifier = Modifier
@@ -339,13 +348,14 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
             viewModel = viewModel.quickAppsViewModel,
             alphabetSideFloat = 100F,
+            labelSize = SettingsValues.AppsView.savedData.cacheValues[SettingsValues.AppsView.AppsViewKeys.labelSize]?.toFloat() ?: 10f,
             appComposable = { action, offset, selected ->
                 val size = 120f
                 Box(
                     modifier = Modifier
                         .offset { offset }
                         .clip(CircleShape)
-                        .size(50.dp)
+                        .size(SettingsValues.getDp(SettingsValues.AppsView.AppsViewKeys.iconSize))
                         .paint(
                             (action as AppData).painter,
                             contentScale = ContentScale.Crop,
@@ -355,7 +365,7 @@ fun HomeScreen(
                 val path = Path().apply {
                     this.addRoundRect(RoundRect(offset.x.toFloat(), offset.y.toFloat(), offset.x + size, offset.y + size, radiusX = 100f, radiusY = 100f))
                 }
-                outline(path, if(selected) 20f else 5f, if(selected) BlendMode.Hardlight else BlendMode.Overlay)
+                outline(path, if(selected)  SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.selectedIconBorderSize) else SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconBorderSize), if(selected) BlendMode.Hardlight else BlendMode.Overlay)
             },
             wordsBGComposable = { offset, size, _ ->
 
@@ -384,7 +394,7 @@ fun HomeScreen(
                 )
             )
 
-            Box(modifier = Modifier.height(100.dp))
+            Box(modifier = Modifier.height(SettingsValues.getDp(SettingsValues.AppsView.AppsViewKeys.appNameBottumPadding)))
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),

@@ -26,19 +26,6 @@ class PreferencesManager private constructor(context: Context) {
         editor.apply()
     }
 
-    fun getData(context: Context, key: String, defaultValue: String): String {
-        // Check the cache first
-        if (sharedPreferencesCache.containsKey(key)) {
-            return sharedPreferencesCache[key] ?: defaultValue
-        }
-
-        val storedValue = sharedPreferences.getString(key, defaultValue) ?: defaultValue
-
-        sharedPreferencesCache[key] = storedValue
-
-        return storedValue
-    }
-
     fun getData(key: String, defaultValue: String): String {
         return sharedPreferences.getString(key, defaultValue) ?: defaultValue
     }

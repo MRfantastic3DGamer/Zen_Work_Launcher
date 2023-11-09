@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import com.dhruv.quick_apps.QuickAppsViewModel
 import com.dhruv.radial_quick_actions.RadialQuickActionViewModel
 import com.example.launcher.Drawing.DrawablePainter
+import com.zenworklauncher.preffsDatabase.SettingsValues
 import com.zenworklauncher.screans.home.model.AppData
 import com.zenworklauncher.screans.home.presentation.HomeQuickAction
 
@@ -31,21 +32,28 @@ class HomeViewModel(
 
     val quickAppsViewModel by mutableStateOf (QuickAppsViewModel(
         onAlphabetSelectionChange = {alphabet, haptic ->
+            if(!SettingsValues.getBoolean(SettingsValues.Main.MainKeys.HapticsEnabled))
+                return@QuickAppsViewModel
             val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             val vibrator = vibratorManager.defaultVibrator
             vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
         },
         onAppSelectionChange = {action, haptic ->
+            if(!SettingsValues.getBoolean(SettingsValues.Main.MainKeys.HapticsEnabled))
+                return@QuickAppsViewModel
             if(action == null) return@QuickAppsViewModel
             val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             val vibrator = vibratorManager.defaultVibrator
             vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
-//            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         },
         actionsMap = getAllAppsFromPackageManager(),
-        rowHeight = 200.0,
-        distanceBetweenIcons = 180.0,
-        sidePadding = 150f
+        rowHeight =
+            SettingsValues.AppsView.savedData.cacheValues[SettingsValues.AppsView.AppsViewKeys.iconRowSeparation]?.toDouble()
+            ?: 150.0,
+        distanceBetweenIcons =
+            SettingsValues.AppsView.savedData.cacheValues[SettingsValues.AppsView.AppsViewKeys.iconSeparation]?.toDouble()
+            ?: 180.0,
+        sidePadding = 150f,
     ))
 
     private fun getAllAppsFromPackageManager() : Map<String, List<AppData>>{
