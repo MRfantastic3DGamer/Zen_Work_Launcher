@@ -47,12 +47,8 @@ class HomeViewModel(
             vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
         },
         actionsMap = getAllAppsFromPackageManager(),
-        rowHeight =
-            SettingsValues.AppsView.savedData.cacheValues[SettingsValues.AppsView.AppsViewKeys.iconRowSeparation]?.toDouble()
-            ?: 150.0,
-        distanceBetweenIcons =
-            SettingsValues.AppsView.savedData.cacheValues[SettingsValues.AppsView.AppsViewKeys.iconSeparation]?.toDouble()
-            ?: 180.0,
+        rowHeight = SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconRowSeparation).toDouble(),
+        distanceBetweenIcons = SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconSeparation).toDouble(),
         sidePadding = 150f,
     ))
 
@@ -90,6 +86,11 @@ class HomeViewModel(
             }
         }
         return res.toMap()
+    }
+
+    fun onRebuildIconCoordinates(){
+        quickAppsViewModel.rowHeight = SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconRowSeparation).toDouble()
+        quickAppsViewModel.distanceBetweenIcons = SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconSeparation).toDouble()
     }
 }
 

@@ -6,9 +6,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import com.example.launcher.Drawing.DrawablePainter
-import com.models.App
 import com.example.launcher.models.AppButtonData
 import com.example.launcher.models.FolderButtonData
+import com.models.App
 import com.models.HexAction
 import kotlin.math.floor
 import kotlin.math.roundToInt
@@ -54,14 +54,6 @@ fun getFoldersByPackageSimilarities(allAps : MutableList<App>): MutableMap<Strin
     }
 
     return packageToApp
-}
-
-fun getAllAppsFromMemory(){
-    //TODO:
-}
-
-fun getFoldersFromMemory(){
-    // TODO:
 }
 
 fun getAllFolderButtons(startingIndex: Int, folders: MutableMap<String, MutableList<App>>, separation: Int, buttonSize: Dp, rowSize: Int): MutableList<FolderButtonData> {
@@ -176,7 +168,6 @@ fun positionToIndex(offset : Offset, offsetX : Float, offsetY : Float, separatio
     val J = (floor((j + 0.5) * 2) - 1).toInt()
     val I =
         floor(i) + (if (J % 4 == 0) 1 else 0) + if (J % 2 == 1) 1 else (if (J % 4 == 0) -1 else 1)
-    println("$I, $J :-> ${(J * 10) + I}")
     return ((J * 10) + I).toInt()
 }
 

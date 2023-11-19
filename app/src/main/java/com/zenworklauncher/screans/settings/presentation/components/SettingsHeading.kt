@@ -23,7 +23,7 @@ fun SettingsHeading(text: String, scrollState: LazyListState? = null){
             .padding(10.dp, 50.dp, 10.dp, 10.dp),
         text = text,
         style = TextStyle(
-            color = Color.Black,
+            color = Color.White,
             fontSize = TextUnit(30f, TextUnitType.Sp),
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.Left

@@ -58,14 +58,13 @@ object SettingsValues{
         }
 
         object savedData {
-            val defaultValues
-                get() = mapOf<AppsViewKeys,String>(
+            val defaultValues = mutableMapOf<AppsViewKeys,String>(
                     AppsViewKeys.height to "490.0",
                     AppsViewKeys.width to "400.0",
 
-                    AppsViewKeys.labelSize to "20.0",
+                    AppsViewKeys.labelSize to "30.0",
                     AppsViewKeys.labelWidth to "50.0",
-                    AppsViewKeys.labelBGBlurValue to "20.0",
+                    AppsViewKeys.labelBGBlurValue to "30.0",
                     AppsViewKeys.labelBGTint to Color.Transparent.toString(),
 
                     AppsViewKeys.iconSize to "50.0",
@@ -95,6 +94,26 @@ object SettingsValues{
         }
     }
 
+    fun saveData(context: Context) {
+        val preffInstance = PreferencesManager.getInstance(context)
+        enumValues<AppsView.AppsViewKeys>().forEach {
+            preffInstance.saveData(it.toString(), getString(it))
+        }
+        enumValues<Main.MainKeys>().forEach {
+            preffInstance.saveData(it.toString(), getString(it))
+        }
+    }
+
+    fun getCashFromSavedData(context: Context){
+        val preffInstance = PreferencesManager.getInstance(context)
+        enumValues<AppsView.AppsViewKeys>().forEach {
+            updateCash(it,preffInstance.getData(it.toString(), getString(it)))
+        }
+        enumValues<Main.MainKeys>().forEach {
+            updateCash(it,preffInstance.getData(it.toString(), getString(it)))
+        }
+    }
+
     fun generateCash(context: Context) {
         AppsView.generateCash(context)
         Main.generateCash(context)
@@ -107,13 +126,22 @@ object SettingsValues{
         Main.savedData.cacheValues[key] = value
     }
 
+    fun getString(key: AppsView.AppsViewKeys): String {
+        val x = AppsView.savedData.cacheValues[key]
+        return x ?:AppsView.savedData.defaultValues[key]!!
+    }
+    fun getString(key: Main.MainKeys): String {
+        val x = Main.savedData.cacheValues[key]
+        return x ?:Main.savedData.defaultValues[key]!!
+    }
+
     fun getFloat(key: AppsView.AppsViewKeys): Float {
         val x = AppsView.savedData.cacheValues[key]?.toFloat()
-        return AppsView.savedData.defaultValues[key]!!.toFloat()
+        return x ?:AppsView.savedData.defaultValues[key]!!.toFloat()
     }
     fun getFloat(key: Main.MainKeys): Float {
         val x = Main.savedData.cacheValues[key]?.toFloat()
-        return Main.savedData.defaultValues[key]!!.toFloat()
+        return x?: Main.savedData.defaultValues[key]!!.toFloat()
     }
 
     fun getDp(key: AppsView.AppsViewKeys, positive: Boolean = true): Dp = getFloat(key).dp

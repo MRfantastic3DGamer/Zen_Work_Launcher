@@ -3,26 +3,23 @@ package com.zenworklauncher
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.VibratorManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.round
 import com.zenworklauncher.preffsDatabase.SettingsValues
 import com.zenworklauncher.screans.home.HomeViewModel
 import com.zenworklauncher.screans.home.presentation.HomeScreen
@@ -35,13 +32,11 @@ class MainActivity : ComponentActivity() {
     private lateinit var context: Context
     private lateinit var pm: PackageManager
 
-    private val separation = 240
-    private val buttonSize = 120.dp
-    private val rowSize    = 10
-
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
+
             context = this
             pm = packageManager
             SettingsValues.generateCash(context)
@@ -52,42 +47,50 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf("home")
                 }
 
-                val transition = updateTransition(state, label = "main")
-
-                val offsetY by transition.animateFloat(label = "homeOffsetY") {
-                    when (it) {
-                        "home" -> {0f}
-                        "settings" -> {1f}
-                        else -> {0f}
-                    }
+                val homeVM by remember {
+                    mutableStateOf(HomeViewModel(pm, context))
                 }
 
-                val homeScale by transition.animateFloat(label = "homeScale") {
-                    when (it) {
-                        "home" -> {1f}
-                        "settings" -> {0.3f}
-                        else -> {1f}
-                    }
+                val settingsVM by remember {
+                    mutableStateOf(SettingsViewModel(homeVM))
                 }
 
-                SettingsScreen(
-                    viewModel = SettingsViewModel()
-                )
+
+                LaunchedEffect(Unit){
+                    SettingsValues.getCashFromSavedData(context)
+                }
 
                 HomeScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .offset { Offset(0f,5000*offsetY).round() }
-                        .scale(homeScale)
-                        .pointerInput(Unit){
+                        .pointerInput(Unit) {
                             detectTapGestures(
                                 onLongPress = {
+                                    if (!SettingsValues.getBoolean(SettingsValues.Main.MainKeys.HapticsEnabled))
+                                        return@detectTapGestures
+                                    val vibratorManager =
+                                        context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                                    val vibrator = vibratorManager.defaultVibrator
+                                    vibrator.vibrate(
+                                        VibrationEffect.createPredefined(
+                                            VibrationEffect.EFFECT_HEAVY_CLICK
+                                        )
+                                    )
                                     state = "settings"
                                 }
                             )
                         },
-                    viewModel = HomeViewModel(pm, context)
+                    viewModel = homeVM
                 )
+
+                AnimatedVisibility(visible = state == "settings") {
+                    SettingsScreen(
+                        viewModel = settingsVM,
+                        backFunction = {
+                            state = "home"
+                        }
+                    )
+                }
             }
         }
     }

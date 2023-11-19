@@ -18,9 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.zenworklauncher.preffsDatabase.SettingsValues
+import com.zenworklauncher.screans.settings.SettingsViewModel
 
 @Composable
-fun MainSettings() {
+fun MainSettings(viewModel: SettingsViewModel) {
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }

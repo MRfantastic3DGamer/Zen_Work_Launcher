@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,8 @@ fun FloatEdit(
     min: Float,
     max: Float,
     scrollState: LazyListState,
+    onChange: (Float)->Unit = {},
+    state: MutableState<SettingsValues.AppsView.AppsViewKeys?>
 ) {
     var value by remember { mutableStateOf(SettingsValues.getFloat(key)) }
     var startedDragging by remember { mutableStateOf(false) }
@@ -49,10 +52,13 @@ fun FloatEdit(
             .background(Color.Transparent)
             .pointerInput(Unit) {
                 detectDragGestures(
-                    onDragStart = { startedDragging = true },
+                    onDragStart = {
+                        startedDragging = true
+                    },
                     onDragEnd = {
                         startedDragging = false
                         valueEditingMode = false
+                        state.value = null
                     },
                     onDragCancel = {
                         startedDragging = false
@@ -63,10 +69,13 @@ fun FloatEdit(
                     if (startedDragging) {
                         valueEditingMode = dragAmount.x.absoluteValue > dragAmount.y.absoluteValue
                         startedDragging = false
+                        state.value = if (valueEditingMode) key else null
                     }
                     if (valueEditingMode) {
                         value = clamp(value + dragAmount.x / 50, min, max)
+                        println(value)
                         SettingsValues.updateCash(key, value.toString())
+                        onChange(value)
                         change.consume()
                     } else {
                         scope.launch {
@@ -85,12 +94,20 @@ fun FloatEdit(
             Arrangement.SpaceBetween
         ) {
             Column {
-                Text(text = name, style = TextStyle(fontWeight = FontWeight.Bold))
-                Text(text = subtitle, style = TextStyle(fontWeight = FontWeight.Light))
+                Text(text = name, style = TextStyle(
+                    color=Color.White,
+                    fontWeight = FontWeight.Bold,
+                ))
+                Text(text = subtitle, style = TextStyle(
+                    color = Color.White,
+                    fontWeight = FontWeight.Light,
+                ))
             }
             val x = value*100
             val y = x.roundToInt()/100f
-            Text(text = y.toString())
+            Text(text = y.toString(), style = TextStyle(
+                color = Color.White,
+            ))
         }
     }
 }

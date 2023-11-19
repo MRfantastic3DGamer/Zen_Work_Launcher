@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.round
 import androidx.compose.ui.unit.toOffset
 import androidx.core.math.MathUtils.clamp
 import com.dhruv.quick_apps.QuickAppsTrigger
@@ -275,7 +276,7 @@ fun HomeScreen(
         )
         {
 
-            blurredBG(20.dp, R.drawable.wallpaper, SettingsValues.AppsView.AppsViewKeys.labelBGTint)
+            blurredBG(SettingsValues.getDp(SettingsValues.AppsView.AppsViewKeys.labelBGBlurValue), R.drawable.wallpaper, SettingsValues.AppsView.AppsViewKeys.labelBGTint)
 
             Box(
                 modifier = Modifier
@@ -312,7 +313,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .clip(iconsShape),
         ){
-            blurredBG(30.dp, R.drawable.wallpaper, SettingsValues.AppsView.AppsViewKeys.iconBGTint)
+            blurredBG(SettingsValues.getDp(SettingsValues.AppsView.AppsViewKeys.iconBGBlurValue), R.drawable.wallpaper, SettingsValues.AppsView.AppsViewKeys.iconBGTint)
 
             Box(
                 modifier = Modifier
@@ -337,9 +338,12 @@ fun HomeScreen(
     Box(
         modifier = modifier
     ) {
+
+        val iconSize = SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconSize)
+        val iconSizeOffset = Offset(-iconSize/2,-iconSize/2).round()
+
         Image(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             bitmap = ImageBitmap.imageResource(id = R.drawable.wallpaper),
             contentDescription = "wallpaper",
             contentScale = ContentScale.Crop
@@ -350,12 +354,12 @@ fun HomeScreen(
             alphabetSideFloat = 100F,
             labelSize = SettingsValues.AppsView.savedData.cacheValues[SettingsValues.AppsView.AppsViewKeys.labelSize]?.toFloat() ?: 10f,
             appComposable = { action, offset, selected ->
-                val size = 120f
+                val iconOffset = offset + iconSizeOffset
                 Box(
                     modifier = Modifier
-                        .offset { offset }
+                        .offset { iconOffset }
                         .clip(CircleShape)
-                        .size(SettingsValues.getDp(SettingsValues.AppsView.AppsViewKeys.iconSize))
+                        .size(iconSize.dp)
                         .paint(
                             (action as AppData).painter,
                             contentScale = ContentScale.Crop,
@@ -363,7 +367,14 @@ fun HomeScreen(
                         )
                 )
                 val path = Path().apply {
-                    this.addRoundRect(RoundRect(offset.x.toFloat(), offset.y.toFloat(), offset.x + size, offset.y + size, radiusX = 100f, radiusY = 100f))
+                    this.addRoundRect(RoundRect(
+                        iconOffset.x.toFloat(),
+                        iconOffset.y.toFloat(),
+                        iconOffset.x + iconSize*2.45f,
+                        iconOffset.y + iconSize*2.45f,
+                        radiusX = 1000f,
+                        radiusY = 1000f)
+                    )
                 }
                 outline(path, if(selected)  SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.selectedIconBorderSize) else SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconBorderSize), if(selected) BlendMode.Hardlight else BlendMode.Overlay)
             },

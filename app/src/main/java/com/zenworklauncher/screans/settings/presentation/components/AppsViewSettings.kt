@@ -13,12 +13,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.zenworklauncher.preffsDatabase.SettingsValues
+import com.zenworklauncher.screans.settings.SettingsViewModel
 
 @Composable
-fun AppsViewSettings() {
-    val scrollState by remember {
-        mutableStateOf(LazyListState())
-    }
+fun AppsViewSettings(viewModel: SettingsViewModel) {
+    val scrollState by remember { mutableStateOf(LazyListState()) }
     LazyColumn(
         modifier = Modifier,
         state = scrollState,
@@ -34,6 +33,7 @@ fun AppsViewSettings() {
                     min = 400f,
                     max = 700f,
                     scrollState = scrollState,
+                    state = viewModel.currentlyBeingEdited,
                 )
             }
             item{
@@ -44,6 +44,7 @@ fun AppsViewSettings() {
                     min = 20f,
                     max = 70f,
                     scrollState = scrollState,
+                    state = viewModel.currentlyBeingEdited,
                 )
             }
             item{
@@ -54,6 +55,7 @@ fun AppsViewSettings() {
                     min = 0f,
                     max = 500f,
                     scrollState = scrollState,
+                    state = viewModel.currentlyBeingEdited,
                 )
             }
             item {
@@ -67,6 +69,7 @@ fun AppsViewSettings() {
                     min = 0f,
                     max = 50f,
                     scrollState = scrollState,
+                    state = viewModel.currentlyBeingEdited,
                 )
             }
             item{
@@ -77,6 +80,7 @@ fun AppsViewSettings() {
                     min = 20f,
                     max = 100f,
                     scrollState = scrollState,
+                    state = viewModel.currentlyBeingEdited,
                 )
             }
             item{
@@ -87,6 +91,10 @@ fun AppsViewSettings() {
                     min = 20f,
                     max = 200f,
                     scrollState = scrollState,
+                    onChange = {
+                        viewModel.shouldRebuildIconPositions = true
+                    },
+                    state = viewModel.currentlyBeingEdited,
                 )
             }
             item{
@@ -97,6 +105,10 @@ fun AppsViewSettings() {
                     min = 20f,
                     max = 200f,
                     scrollState = scrollState,
+                    onChange = {
+                        viewModel.shouldRebuildIconPositions = true
+                    },
+                    state = viewModel.currentlyBeingEdited,
                 )
             }
             item{
@@ -107,6 +119,7 @@ fun AppsViewSettings() {
                     min = 0f,
                     max = 50f,
                     scrollState = scrollState,
+                    state = viewModel.currentlyBeingEdited,
                 )
             }
             item{
@@ -117,6 +130,7 @@ fun AppsViewSettings() {
                     min = 0f,
                     max = 50f,
                     scrollState = scrollState,
+                    state = viewModel.currentlyBeingEdited,
                 )
             }
             item {
@@ -130,6 +144,7 @@ fun AppsViewSettings() {
                     min = 0f,
                     max = 100f,
                     scrollState = scrollState,
+                    state = viewModel.currentlyBeingEdited,
                 )
                 Text(text = "label BG tint")
             }
@@ -141,6 +156,7 @@ fun AppsViewSettings() {
                     min = 0f,
                     max = 100f,
                     scrollState = scrollState,
+                    state = viewModel.currentlyBeingEdited,
                 )
                 Text(text = "icons BG tint")
             }
