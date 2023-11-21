@@ -1,6 +1,6 @@
 # Zen_Work_Launcher
 
-This Android Launcher is a passion project to provide quick access to all the fuctionality that an android can offer in only one click.
+This Android Launcher is a passion project to provide quick access to all the functionality that an android can offer in only one click.
 
 It is built using Jetpack compose and the functionality is seperated into nice and easy to understand pieces
 reffer to them here
