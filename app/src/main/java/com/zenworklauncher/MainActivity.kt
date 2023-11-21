@@ -27,6 +27,7 @@ import com.zenworklauncher.screans.settings.SettingsViewModel
 import com.zenworklauncher.screans.settings.presentation.SettingsScreen
 import com.zenworklauncher.ui.theme.ZenWorkLauncherTheme
 
+
 class MainActivity : ComponentActivity() {
 
     private lateinit var context: Context
@@ -35,6 +36,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
+//        val appWidgetManager = AppWidgetManager.getInstance(this)
+//        val appWidgetHost = AppWidgetHost(this, resources.getInteger(R.integer.host_id))
+//        appWidgetHost.allocateAppWidgetId()
+//        if(appWidgetManager.bindAppWidgetIdIfAllowed(100, ComponentName())){
+//        val intent = Intent(AppWidgetManager.ACTION_APPWIDGET_BIND).apply {
+//            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+//            putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, info.componentName)
+//            // This is the options bundle described in the preceding section.
+//            putExtra(AppWidgetManager.EXTRA_APPWIDGET_OPTIONS, options)
+//        }
+//        }
+//        startActivityForResult(intent, REQUEST_BIND_APPWIDGET)
+
         setContent {
 
             context = this
