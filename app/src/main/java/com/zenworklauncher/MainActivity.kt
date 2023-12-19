@@ -1,25 +1,30 @@
 package com.zenworklauncher
 
+import android.appwidget.AppWidgetHost
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Parcelable
 import android.os.VibrationEffect
 import android.os.VibratorManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.tooling.preview.Preview
 import com.zenworklauncher.preffsDatabase.SettingsValues
 import com.zenworklauncher.screans.home.HomeViewModel
 import com.zenworklauncher.screans.home.presentation.HomeScreen
@@ -32,23 +37,19 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var context: Context
     private lateinit var pm: PackageManager
+    lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    lateinit var _viewModel: MutableState<HomeViewModel>
+    val viewModel
+        get() = _viewModel.value
+
+    override fun onStart() {
+        requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { res -> println(res) }
+        super.onStart()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-
-//        val appWidgetManager = AppWidgetManager.getInstance(this)
-//        val appWidgetHost = AppWidgetHost(this, resources.getInteger(R.integer.host_id))
-//        appWidgetHost.allocateAppWidgetId()
-//        if(appWidgetManager.bindAppWidgetIdIfAllowed(100, ComponentName())){
-//        val intent = Intent(AppWidgetManager.ACTION_APPWIDGET_BIND).apply {
-//            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-//            putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, info.componentName)
-//            // This is the options bundle described in the preceding section.
-//            putExtra(AppWidgetManager.EXTRA_APPWIDGET_OPTIONS, options)
-//        }
-//        }
-//        startActivityForResult(intent, REQUEST_BIND_APPWIDGET)
 
         setContent {
 
@@ -58,18 +59,20 @@ class MainActivity : ComponentActivity() {
 
 
             ZenWorkLauncherTheme {
-                var state by remember {
-                    mutableStateOf("home")
+                var state by remember { mutableStateOf("home") }
+
+                _viewModel = remember {
+                    mutableStateOf(
+                        HomeViewModel(
+                            packageManager =  pm,
+                            context = context,
+                            appWidgetHost = AppWidgetHost(context, APP_WIDGET_HOST_ID),
+                            appWidgetManager = AppWidgetManager.getInstance(context)
+                        )
+                    )
                 }
 
-                val homeVM by remember {
-                    mutableStateOf(HomeViewModel(pm, context))
-                }
-
-                val settingsVM by remember {
-                    mutableStateOf(SettingsViewModel(homeVM))
-                }
-
+                val settingsVM by remember { mutableStateOf(SettingsViewModel(viewModel)) }
 
                 LaunchedEffect(Unit){
                     SettingsValues.getCashFromSavedData(context)
@@ -95,7 +98,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         },
-                    viewModel = homeVM
+                    viewModel = viewModel
                 )
 
                 AnimatedVisibility(visible = state == "settings") {
@@ -109,46 +112,60 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_PICK_APPWIDGET) {
+                if (data != null) {
+                     configureWidget(data)
+                }
+            } else if (requestCode == REQUEST_CREATE_APPWIDGET) {
+                if (data != null) {
+                    viewModel.createWidget(data)
+                }
+            }
+        } else if (resultCode == RESULT_CANCELED && data != null) {
+            val appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+            if (appWidgetId != -1) {
+                viewModel.appWidgetHost.deleteAppWidgetId(appWidgetId)
+            }
+        }
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ZenWorkLauncherTheme {
-        Greeting("Android")
+    fun selectWidget() {
+        val appWidgetId: Int = viewModel.appWidgetHost.allocateAppWidgetId()
+        val pickIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_PICK)
+        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+        addEmptyData(pickIntent)
+        startActivityForResult(pickIntent, REQUEST_PICK_APPWIDGET)
+    }
+
+    fun addEmptyData(pickIntent: Intent) {
+        val customInfo: ArrayList<out Parcelable> = ArrayList()
+        pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_INFO, customInfo)
+        val customExtras: ArrayList<out Parcelable> = ArrayList()
+        pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_EXTRAS, customExtras)
+    }
+
+    private fun configureWidget(data: Intent) {
+        val extras = data.extras
+        val appWidgetId = extras!!.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+        val appWidgetInfo: AppWidgetProviderInfo = viewModel.appWidgetManager.getAppWidgetInfo(appWidgetId)
+        if (appWidgetInfo.configure != null) {
+            val intent = Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE)
+            intent.component = appWidgetInfo.configure
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            startActivityForResult(intent, REQUEST_CREATE_APPWIDGET)
+        } else {
+            viewModel.createWidget(data)
+        }
+    }
+
+    companion object {
+        const val APP_WIDGET_HOST_ID = 1
+        const val REQUEST_PICK_APPWIDGET = 2
+        const val REQUEST_CREATE_APPWIDGET = 3
     }
 }
-
-
-// region app drawr
-//            val allApps by remember { mutableStateOf(getAllAppsFromPackageManager(pm)) }
-//            val foldersByPackages by remember { mutableStateOf(getFoldersByPackageSimilarities(allApps)) }
-//            val folderButtons by remember { mutableStateOf(getAllFolderButtons(0,foldersByPackages,separation,buttonSize,rowSize)) }
-//            val appButtons by remember { mutableStateOf(getAllAppButtons(folderButtons.size,allApps,separation,buttonSize,rowSize)) }
-//            val actionMap by remember { mutableStateOf(getPositionActions(appButtons,folderButtons,rowSize)) }
-//            val onClickAction : (Int)->Unit by remember{
-//                mutableStateOf({index ->
-//                    if (actionMap[index] != null) {
-//                        if (actionMap[index]?.folderIndex == null) {
-//                            val launchIntent: Intent? =
-//                                actionMap[index]?.let { pm.getLaunchIntentForPackage(it.appPackage) }
-//                            if (launchIntent != null) {
-//                                ContextCompat.startActivity(context, launchIntent, Bundle.EMPTY)
-//                            } else {
-//                                println("could not open this app : ${actionMap[index]?.appPackage}")
-//                            }
-//                        } else {
-//                            // TODO: open folder
-//                        }
-//                    }
-//                })
-//            }
-// endregion

@@ -12,7 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/home-page" />
+            <option value="$PROJECT_DIR$/common-utils" />
             <option value="$PROJECT_DIR$/quick-apps" />
             <option value="$PROJECT_DIR$/radial-quick-actions" />
           </set>

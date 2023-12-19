@@ -1,7 +1,7 @@
 package com.zenworklauncher.screans.settings.presentation
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
@@ -243,11 +243,11 @@ fun SettingsScreen(
                 transitionSpec = {
                     slideIntoContainer(
                         animationSpec = tween(100, easing = EaseIn),
-                        towards = AnimatedContentScope.SlideDirection.Up
+                        towards = AnimatedContentTransitionScope.SlideDirection.Up
                     ).with(
                         slideOutOfContainer(
                             animationSpec = tween(100, easing = EaseOut),
-                            towards = AnimatedContentScope.SlideDirection.Up
+                            towards = AnimatedContentTransitionScope.SlideDirection.Up
                         )
                     )
                 }

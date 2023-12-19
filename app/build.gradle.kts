@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.zenworklauncher"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.zenworklauncher"
         minSdk = 31
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -116,4 +116,10 @@ dependencies {
 
     // datastore
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
+    // icons
+    implementation ("androidx.compose.material:material-icons-extended-android:1.5.4")
+
+    // animation
+    implementation ("androidx.compose.animation:animation-core-android:1.5.4")
 }
