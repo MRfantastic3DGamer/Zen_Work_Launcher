@@ -21,6 +21,7 @@ import com.dhruv.radial_quick_actions.RadialQuickActionViewModel
 import com.example.launcher.Drawing.DrawablePainter
 import com.zenworklauncher.preffsDatabase.SettingsValues
 import com.zenworklauncher.screans.home.model.AppData
+import com.zenworklauncher.screans.home.model.AppRefData
 import com.zenworklauncher.screans.home.model.HomeFocusEnum
 import com.zenworklauncher.screans.home.presentation.HomeQuickAction
 
@@ -33,12 +34,12 @@ class HomeViewModel(
 
     var homeFocusEnum           by mutableStateOf(HomeFocusEnum.Home)
     var allAppsData             by mutableStateOf(listOf<AppData>())
+    var refAppsData             by mutableStateOf(listOf<AppRefData>())
     var searching               by  mutableStateOf(false)
     var appSearchQuery          by mutableStateOf("")
     var searchedAppsData        by mutableStateOf(listOf<AppData>())
 
     val appWidgetHostViewsIDs = mutableStateListOf<Int>()
-
 
     val radialViewModel : RadialQuickActionViewModel by mutableStateOf (RadialQuickActionViewModel(listOf(
             HomeQuickAction("0",{}),
@@ -64,32 +65,41 @@ class HomeViewModel(
             val vibrator = vibratorManager.defaultVibrator
             vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
         },
+        onActionSelect = {
+            context.startActivity(allAppsData[it].launchIntent)
+        },
         firstCharToActionsMap = getAllAppsFromPackageManager(),
+        groupNameToActionsMap = getAppGroupsFromStorage(),
         rowHeight = SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconRowSeparation).toDouble(),
         distanceBetweenIcons = SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconSeparation).toDouble(),
         sidePadding = 150f,
     ))
 
-    private fun getAllAppsFromPackageManager() : Map<String, List<AppData>>{
+    private fun getAllAppsFromPackageManager() : Map<String, MutableList<Int>> {
         allAppsData = getMyAllAppsData()
-        val installedApps: MutableList<AppData> = allAppsData.toMutableList()
-        val res = mutableMapOf<String, MutableList<AppData>>()
-        installedApps.sortBy { t->
-            t.Name
-        }
-        installedApps.forEach { action ->
-            if(!action.Name[0].isLetter()){
-                if(res["@"] == null)
+        refAppsData = generateAppsRefData()
+
+
+        val installedApps: MutableList<AppRefData> = refAppsData.toMutableList()
+        val res = mutableMapOf<String, MutableList<Int>>()
+        installedApps.forEachIndexed { index, action ->
+            if (!action.name[0].isLetter()) {
+                if (res["@"] == null)
                     res["@"] = mutableListOf()
-                res["@"]!!.add(action)
-            }
-            else {
-                if (res[action.Name[0].uppercase()] == null)
-                    res[action.Name[0].uppercase()] = mutableListOf()
-                res[action.Name[0].uppercase()]!!.add(action)
+                res["@"]!!.add(index)
+            } else {
+                if (res[action.name[0].uppercase()] == null)
+                    res[action.name[0].uppercase()] = mutableListOf()
+                res[action.name[0].uppercase()]!!.add(index)
             }
         }
         return res.toMap()
+    }
+
+    private fun getAppGroupsFromStorage() : Map<String, List<Int>>{
+        val appsMap = mutableMapOf<String, List<Int>>()
+        // TODO: Get app groups from storage
+        return appsMap
     }
 
     private fun getMyAllAppsData(): List<AppData> {
@@ -109,9 +119,18 @@ class HomeViewModel(
             )
             installedApps.add(saveApp)
         }
+        installedApps.sortBy { it.name }
         return installedApps.toList()
     }
 
+    private fun generateAppsRefData(): List<AppRefData> {
+        val refApps: MutableList<AppRefData> = ArrayList()
+
+        for (i in allAppsData.indices)
+            refApps.add(AppRefData(allAppsData[i].Name, i))
+
+        return refApps
+    }
 
     fun onRebuildIconCoordinates(){
         quickAppsViewModel.rowHeight = SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconRowSeparation).toDouble()
@@ -149,8 +168,8 @@ class HomeViewModel(
         quickAppsViewModel.onDrag(change)
     }
 
-    fun onDragStop (context: Context){
-        quickAppsViewModel.onDragStop(context)
+    fun onDragStop (){
+        quickAppsViewModel.onDragStop()
     }
 
     fun startAppSearching (){
@@ -170,5 +189,9 @@ class HomeViewModel(
 
     fun stopAppSearching (){
         searching = false
+    }
+
+    companion object {
+        var packageToData: Map<String, Int> = mapOf()
     }
 }

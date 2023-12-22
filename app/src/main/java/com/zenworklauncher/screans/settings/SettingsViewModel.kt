@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.zenworklauncher.preffsDatabase.SettingsValues
 import com.zenworklauncher.screans.home.HomeViewModel
+import com.zenworklauncher.screans.settings.model.FoldersPageState
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -25,7 +26,9 @@ class SettingsViewModel(
     var iconBorderSize by mutableStateOf(0.dp)
     var selectedIconBorderSize by mutableStateOf(0.dp)
 
-
+    var foldersPageState by mutableStateOf(FoldersPageState(
+        folders = listOf()
+    ))
 
     var currentlyBeingEdited = mutableStateOf<SettingsValues.AppsView.AppsViewKeys?>(null)
     var shouldRebuildIconPositions = false

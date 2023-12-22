@@ -1,6 +1,5 @@
 package com.zenworklauncher.screans.home.presentation.components
 
-import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +19,7 @@ fun QuickAppsTriggerPositioning(
     onTriggerGloballyPositioned: (LayoutCoordinates) -> Unit,
     onDragStart: (Offset) -> Unit,
     onDrag: (Offset) -> Unit,
-    onDragStop: (Context) -> Unit
+    onDragStop: () -> Unit
 ){
     Column {
         Box {

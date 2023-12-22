@@ -79,15 +79,21 @@ fun PathsCalculation(
     val triggerOpenPath = Path()
     triggerOpenPath.moveTo(arcPoints1.first().x, arcPoints1.first().y)
     if (isTriggerActive){
-        for (i in 0 until  arcPoints1.size)
+        for (i in 1 until  arcPoints1.size)
             triggerOpenPath.lineTo(arcPoints1[i].x, arcPoints1[i].y)
     }
     val minY        = arcPoints1.last().y
     val maxY        = arcPoints1.first().y
-    for (i in 0 until triggerArcTop.size/2)
-        triggerOpenPath.lineTo(triggerArcTop[i].x, min(minY, triggerArcTop[i].y))
-    for (i in triggerArcTop.size/2+1 until triggerArcTop.size)
-        triggerOpenPath.lineTo(triggerArcTop[i].x, triggerArcTop[i].y)
+    if (isTriggerActive){
+        for (i in 0 until triggerArcTop.size/2)
+            triggerOpenPath.lineTo(triggerArcTop[i].x, min(minY, triggerArcTop[i].y))
+        for (i in triggerArcTop.size/2+1 until triggerArcTop.size)
+            triggerOpenPath.lineTo(triggerArcTop[i].x, triggerArcTop[i].y)
+    }
+    else{
+        for (i in 0 until triggerArcTop.size)
+            triggerOpenPath.lineTo(triggerArcTop[i].x, triggerArcTop[i].y)
+    }
     for (i in 0 until triggerArcBot.size)
         triggerOpenPath.lineTo(triggerArcBot[i].x, max(maxY, triggerArcBot[i].y))
     triggerOpenPath.close()
@@ -96,23 +102,25 @@ fun PathsCalculation(
 
 // region apps section path
     val appsSectionPath = Path()
-    val appsSectionPathStart = selectedAlphabetOffset + Offset(100 - padding, radius_2)
-    val appsSectionPathArc2End = selectedAlphabetOffset + Offset(100 - padding, -radius_2)
-    val appsSectionPathArc3Start = selectedAlphabetOffset + Offset(100 - padding, radius_3)
-    val appsSectionPathArc3End = selectedAlphabetOffset + Offset(100 - padding, -radius_3)
+    if (isTriggerActive){
+        val appsSectionPathStart = selectedAlphabetOffset + Offset(100 - padding, radius_2)
+        val appsSectionPathArc2End = selectedAlphabetOffset + Offset(100 - padding, -radius_2)
+        val appsSectionPathArc3Start = selectedAlphabetOffset + Offset(100 - padding, radius_3)
+        val appsSectionPathArc3End = selectedAlphabetOffset + Offset(100 - padding, -radius_3)
 
-    val minYValue = triggerOffset.y - radius_2 - 100
+        val minYValue = triggerOffset.y - radius_2 - 100
 
-    appsSectionPath.moveTo(appsSectionPathArc3Start.x, appsSectionPathArc3Start.y)
-    appsSectionPath.lineTo(appsSectionPathStart.x, max(appsSectionPathStart.y, minYValue))
-    for (i in 0 until  arcPoints2.size)
-        appsSectionPath.lineTo(arcPoints2[i].x, max(arcPoints2[i].y, minYValue))
-    appsSectionPath.lineTo(appsSectionPathArc2End.x, max(appsSectionPathArc2End.y, minYValue))
-    appsSectionPath.lineTo(appsSectionPathArc3End.x, max(appsSectionPathArc3End.y, minYValue))
-    arcPoints3.reverse()
-    for (i in 0 until  arcPoints3.size)
-        appsSectionPath.lineTo(arcPoints3[i].x, max(arcPoints3[i].y, minYValue))
-    appsSectionPath.close()
+        appsSectionPath.moveTo(appsSectionPathArc3Start.x, appsSectionPathArc3Start.y)
+        appsSectionPath.lineTo(appsSectionPathStart.x, max(appsSectionPathStart.y, minYValue))
+        for (i in 0 until  arcPoints2.size)
+            appsSectionPath.lineTo(arcPoints2[i].x, max(arcPoints2[i].y, minYValue))
+        appsSectionPath.lineTo(appsSectionPathArc2End.x, max(appsSectionPathArc2End.y, minYValue))
+        appsSectionPath.lineTo(appsSectionPathArc3End.x, max(appsSectionPathArc3End.y, minYValue))
+        arcPoints3.reverse()
+        for (i in 0 until  arcPoints3.size)
+            appsSectionPath.lineTo(arcPoints3[i].x, max(arcPoints3[i].y, minYValue))
+        appsSectionPath.close()
+    }
     paths.add(appsSectionPath)
 // endregion
 

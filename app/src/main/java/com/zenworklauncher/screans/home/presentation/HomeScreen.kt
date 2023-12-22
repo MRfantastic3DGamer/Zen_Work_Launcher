@@ -69,8 +69,6 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
 ) {
-
-
     val haptic                          = LocalHapticFeedback.current
     val searchFieldFocusRequester       = remember { FocusRequester() }
     val selectionMode                   = viewModel.quickAppsViewModel.selectionMode
@@ -78,20 +76,21 @@ fun HomeScreen(
     val keyboardController              = LocalSoftwareKeyboardController.current
 
     val selectedAlphabetYOffset by animateFloatAsState(
-        targetValue = viewModel.quickAppsViewModel.getSelectedStringYOffset,
+        targetValue = viewModel.quickAppsViewModel.getSelectedTriggerYOffset,
         label = "selected-string-Y-offset"
     )
     val cursorOffset by animateOffsetAsState(
         targetValue = viewModel.quickAppsViewModel.getGlobalResponsiveBubblePosition(SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconSize)*0.75f),
         label = "selected-action-offset"
     )
-    var currentFocusTarget by remember { mutableFloatStateOf(0f) }
-    val cursorFocus by animateFloatAsState(targetValue = currentFocusTarget, label = "cursor-focus")
+    var currentFocusValueTarget by remember { mutableFloatStateOf(0f) }
+    val cursorFocus by animateFloatAsState(targetValue = currentFocusValueTarget, label = "cursor-focus")
     LaunchedEffect(selectionMode, currentAction){
-        currentFocusTarget = when (selectionMode) {
+        currentFocusValueTarget = when (selectionMode) {
             SelectionMode.NonActive -> 0f
-            SelectionMode.CharSelect -> 1f
-            SelectionMode.AppSelect -> if (currentAction == null) 0f else 1f
+            SelectionMode.TriggerGestureSelect -> 1f
+            SelectionMode.AppGestureSelect -> if (currentAction == null) 0f else 1f
+            else -> 0f
         }
     }
     val context = LocalContext.current
@@ -239,7 +238,7 @@ fun HomeScreen(
                 alphabetSideFloat = 100F,
                 labelSize = SettingsValues.AppsView.savedData.cacheValues[SettingsValues.AppsView.AppsViewKeys.labelSize]?.toFloat() ?: 10f,
                 appComposable = { action, offset, selected -> AppIcon(action, offset, selected, iconSizeOffset, iconSize) },
-                wordsBGComposable = { offset, size, _ ->
+                triggerBGComposable = { offset, size, _ ->
                     triggerSide(size, offset)
                     iconsSide(size, offset, 5f)
                 },
@@ -247,10 +246,7 @@ fun HomeScreen(
                     triggerSide(size, offset)
                     iconsSide(size, offset, 5f)
                 },
-                triggerClosedBGComposable = { offset, size, _ ->
-                    triggerSide(size, offset)
-                    iconsSide(size, offset, 5f)
-                },
+                allActions = viewModel.allAppsData
             )
         }
 
@@ -259,7 +255,7 @@ fun HomeScreen(
                 .fillMaxSize(),
             Arrangement.Bottom,
         ) {
-            SelectedAppLabel(action = currentAction)
+            SelectedAppLabel(action = if (currentAction == null) null else viewModel.allAppsData[currentAction])
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -300,7 +296,7 @@ fun HomeScreen(
                         viewModel.onDrag(it)
                     },
                     onDragStop = {
-                        viewModel.onDragStop(it)
+                        viewModel.onDragStop()
                     }
                 )
             }

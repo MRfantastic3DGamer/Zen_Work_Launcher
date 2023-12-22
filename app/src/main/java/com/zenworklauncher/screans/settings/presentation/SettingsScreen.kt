@@ -261,7 +261,7 @@ fun SettingsScreen(
                         AppsViewSettings(viewModel)
                     }
                     SettingsValues.SettingsTabType.Folders -> Box (Modifier.fillMaxSize()){
-                        FoldersSettings(viewModel)
+                        FoldersSettings(viewModel.foldersPageState)
                     }
                 }
             }

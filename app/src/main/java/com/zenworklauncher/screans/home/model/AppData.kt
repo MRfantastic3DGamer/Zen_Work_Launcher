@@ -2,10 +2,11 @@ package com.zenworklauncher.screans.home.model
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.runtime.Immutable
 import com.dhruv.quick_apps.Action
 import com.example.launcher.Drawing.DrawablePainter
 
-
+@Immutable
 data class AppData(
     @JvmField val Name: String,
     val packageName: String,
