@@ -2,6 +2,12 @@
 
 This Android Launcher is a passion project to provide quick access to all the functionality that an android can offer in only one click.
 
+
+
+https://github.com/MRfantastic3DGamer/Zen_Work_Launcher/assets/66933165/03a646b0-1dce-4334-be91-c5d1fa90fc3c
+
+
+
 It is built using Jetpack compose and the functionality is seperated into nice and easy to understand pieces
 reffer to them here
 
