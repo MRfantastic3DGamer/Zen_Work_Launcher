@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.dhruv.quick_apps.Action
-import com.zenworklauncher.preffsDatabase.SettingsValues
+import com.zenworklauncher.database.preffs_database.SettingsValues
 
 @Composable
 fun SelectedAppLabel(action: Action?){

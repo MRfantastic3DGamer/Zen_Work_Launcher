@@ -1,4 +1,4 @@
-package com.zenworklauncher.preffsDatabase
+package com.zenworklauncher.database.preffs_database
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
@@ -24,12 +24,13 @@ object SettingsValues{
                     MainKeys.HapticsEnabled to "true"
                 )
 
-            val cacheValues = mutableMapOf<Main.MainKeys, String>()
+            val cacheValues = mutableMapOf<MainKeys, String>()
         }
 
         companion object {
-            fun getVal(context: Context, key: Main.MainKeys): String {
-                return PreferencesManager.getInstance(context).getData(key.toString(), savedData.defaultValues[key]!!)
+            fun getVal(context: Context, key: MainKeys): String {
+                return PreferencesManager.getInstance(context)
+                    .getData(key.toString(), savedData.defaultValues[key]!!)
             }
             fun generateCash(context: Context){
                 enumValues<MainKeys>().forEach {
@@ -84,7 +85,8 @@ object SettingsValues{
 
         companion object {
             fun getVal(context: Context, key: AppsViewKeys): String {
-                return PreferencesManager.getInstance(context).getData(key.toString(), savedData.defaultValues[key]!!)
+                return PreferencesManager.getInstance(context)
+                    .getData(key.toString(), savedData.defaultValues[key]!!)
             }
             fun generateCash(context: Context){
                 enumValues<AppsViewKeys>().forEach {
@@ -128,16 +130,16 @@ object SettingsValues{
 
     fun getString(key: AppsView.AppsViewKeys): String {
         val x = AppsView.savedData.cacheValues[key]
-        return x ?:AppsView.savedData.defaultValues[key]!!
+        return x ?: AppsView.savedData.defaultValues[key]!!
     }
     fun getString(key: Main.MainKeys): String {
         val x = Main.savedData.cacheValues[key]
-        return x ?:Main.savedData.defaultValues[key]!!
+        return x ?: Main.savedData.defaultValues[key]!!
     }
 
     fun getFloat(key: AppsView.AppsViewKeys): Float {
         val x = AppsView.savedData.cacheValues[key]?.toFloat()
-        return x ?:AppsView.savedData.defaultValues[key]!!.toFloat()
+        return x ?: AppsView.savedData.defaultValues[key]!!.toFloat()
     }
     fun getFloat(key: Main.MainKeys): Float {
         val x = Main.savedData.cacheValues[key]?.toFloat()

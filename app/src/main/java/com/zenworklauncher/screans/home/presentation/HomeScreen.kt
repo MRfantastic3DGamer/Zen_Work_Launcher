@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,8 +41,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.compose.ui.unit.toOffset
@@ -48,7 +53,7 @@ import com.dhruv.quick_apps.QuickAppsVisual
 import com.dhruv.quick_apps.SelectionMode
 import com.dhruv.radial_quick_actions.model.QuickAction
 import com.zenworklauncher.R
-import com.zenworklauncher.preffsDatabase.SettingsValues
+import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.screans.home.HomeViewModel
 import com.zenworklauncher.screans.home.presentation.components.AppIcon
 import com.zenworklauncher.screans.home.presentation.components.Background
@@ -80,7 +85,9 @@ fun HomeScreen(
         label = "selected-string-Y-offset"
     )
     val cursorOffset by animateOffsetAsState(
-        targetValue = viewModel.quickAppsViewModel.getGlobalResponsiveBubblePosition(SettingsValues.getFloat(SettingsValues.AppsView.AppsViewKeys.iconSize)*0.75f),
+        targetValue = viewModel.quickAppsViewModel.getGlobalResponsiveBubblePosition(
+            SettingsValues.getFloat(
+                SettingsValues.AppsView.AppsViewKeys.iconSize)*0.75f),
         label = "selected-action-offset"
     )
     var currentFocusValueTarget by remember { mutableFloatStateOf(0f) }
@@ -246,7 +253,24 @@ fun HomeScreen(
                     triggerSide(size, offset)
                     iconsSide(size, offset, 5f)
                 },
-                allActions = viewModel.allAppsData
+                allActions = viewModel.allAppsData,
+                groupLabelComposable = { offset, size, value ->
+
+                    Box (
+                        Modifier.offset { offset }
+                    ){
+                        Text(
+                            text = value,
+                            style = TextStyle(
+                                color = Color.White,
+                                fontSize = TextUnit(
+                                    SettingsValues.AppsView.savedData.cacheValues[SettingsValues.AppsView.AppsViewKeys.labelSize]?.toFloat() ?: 10f,
+                                    TextUnitType.Sp
+                                )
+                            )
+                        )
+                    }
+                }
             )
         }
 
@@ -310,5 +334,7 @@ fun HomeScreen(
 }
 
 fun Modifier.visibleHeight(visibility: Boolean): Modifier {
-    return if (visibility) this else this then Modifier.height(0.dp).alpha(0f)
+    return if (visibility) this else this then Modifier
+        .height(0.dp)
+        .alpha(0f)
 }

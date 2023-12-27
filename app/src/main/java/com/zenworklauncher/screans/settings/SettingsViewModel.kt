@@ -6,7 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import com.zenworklauncher.preffsDatabase.SettingsValues
+import com.zenworklauncher.database.preffs_database.SettingsValues
+import com.zenworklauncher.database.rooms_database.DatabaseProvider
+import com.zenworklauncher.model.GroupDataEntity
 import com.zenworklauncher.screans.home.HomeViewModel
 import com.zenworklauncher.screans.settings.model.FoldersPageState
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -26,9 +28,7 @@ class SettingsViewModel(
     var iconBorderSize by mutableStateOf(0.dp)
     var selectedIconBorderSize by mutableStateOf(0.dp)
 
-    var foldersPageState by mutableStateOf(FoldersPageState(
-        folders = listOf()
-    ))
+    var foldersPageState by mutableStateOf(FoldersPageState(folders = listOf()))
 
     var currentlyBeingEdited = mutableStateOf<SettingsValues.AppsView.AppsViewKeys?>(null)
     var shouldRebuildIconPositions = false
@@ -56,5 +56,21 @@ class SettingsViewModel(
             }
             SettingsValues.saveData(context)
         }
+    }
+
+    fun addGroup(context: Context, old: GroupDataEntity? = null, group: GroupDataEntity){
+        DatabaseProvider.addGroup(context, old, group)
+        updateFoldersPageState()
+    }
+
+    fun deleteGroup(context: Context, group: GroupDataEntity){
+        DatabaseProvider.deleteGroup(context, group)
+        updateFoldersPageState()
+    }
+
+    private fun updateFoldersPageState(){
+        foldersPageState = foldersPageState.copy(
+            folders = DatabaseProvider.allGroups
+        )
     }
 }

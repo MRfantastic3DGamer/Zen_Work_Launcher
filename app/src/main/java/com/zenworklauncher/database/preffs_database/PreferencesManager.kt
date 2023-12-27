@@ -1,4 +1,4 @@
-package com.zenworklauncher.preffsDatabase
+package com.zenworklauncher.database.preffs_database
 
 import android.content.Context
 import android.content.SharedPreferences

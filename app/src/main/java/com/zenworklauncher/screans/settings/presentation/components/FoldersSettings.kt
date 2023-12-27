@@ -11,16 +11,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.zenworklauncher.database.utils.Converters
+import com.zenworklauncher.model.GroupDataEntity
 import com.zenworklauncher.screans.settings.model.FoldersPageState
-import com.zenworklauncher.screans.settings.model.GroupData
 
 @Composable
-fun FoldersSettings(state: FoldersPageState) {
+fun FoldersSettings(
+    state: FoldersPageState,
+    upsertGroup: (GroupDataEntity?, GroupDataEntity) -> Unit,
+    deleteGroup: (GroupDataEntity)->Unit,
+) {
     LazyColumn(
         Modifier
             .fillMaxSize(),
@@ -32,7 +37,8 @@ fun FoldersSettings(state: FoldersPageState) {
         items(state.folders){
             AppsGroupButton(
                 data = it,
-                delete = {},
+                delete = { deleteGroup(it) },
+                update = { new -> upsertGroup(it, new) },
             )
             Spacer(modifier = Modifier.height(10.dp))
         }
@@ -41,11 +47,16 @@ fun FoldersSettings(state: FoldersPageState) {
             Row (
                 Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        val newList = mutableListOf(GroupData("new group", Icons.Default.List, mutableListOf()))
-                        newList.addAll(state.folders)
-                        state.folders = newList
-                    },
+                    .clickable(onClickLabel = "add new group", role = Role.Button, onClick = {
+                        upsertGroup(
+                            null,
+                            GroupDataEntity(
+                                name = "new group",
+                                animatedIconKey = "",
+                                packages = Converters.listToString(listOf())
+                            )
+                        )
+                    }),
                 horizontalArrangement = Arrangement.Center
             ){
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add-new-group")

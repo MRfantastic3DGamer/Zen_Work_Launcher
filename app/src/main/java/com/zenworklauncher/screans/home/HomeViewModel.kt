@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModel
 import com.dhruv.quick_apps.QuickAppsViewModel
 import com.dhruv.radial_quick_actions.RadialQuickActionViewModel
 import com.example.launcher.Drawing.DrawablePainter
-import com.zenworklauncher.preffsDatabase.SettingsValues
+import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.screans.home.model.AppData
 import com.zenworklauncher.screans.home.model.AppRefData
 import com.zenworklauncher.screans.home.model.HomeFocusEnum

@@ -89,8 +89,6 @@ dependencies {
     val room_version = "2.5.2"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
-    // To use Kotlin annotation processing tool (kapt)
-    ksp("androidx.room:room-compiler:$room_version")
     // To use Kotlin Symbol Processing (KSP)
     ksp("androidx.room:room-compiler:$room_version")
     // Kotlin Extensions and Coroutines support for Room
@@ -116,6 +114,7 @@ dependencies {
 
     // datastore
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation ("com.google.code.gson:gson:2.9.0")
 
     // icons
     implementation ("androidx.compose.material:material-icons-extended-android:1.5.4")

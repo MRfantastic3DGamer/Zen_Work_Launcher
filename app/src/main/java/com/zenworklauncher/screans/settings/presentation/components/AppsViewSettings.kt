@@ -12,7 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.zenworklauncher.preffsDatabase.SettingsValues
+import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.screans.settings.SettingsViewModel
 
 @Composable

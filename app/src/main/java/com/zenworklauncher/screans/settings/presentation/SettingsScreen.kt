@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.zenworklauncher.preffsDatabase.SettingsValues
+import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.screans.settings.SettingsViewModel
 import com.zenworklauncher.screans.settings.presentation.components.AppsViewSettings
 import com.zenworklauncher.screans.settings.presentation.components.FoldersSettings
@@ -187,11 +187,6 @@ fun SettingsScreen(
 
             }
 
-//            if(viewModel.currentlyBeingEdited.value != null){
-//                Box(modifier = Modifier
-//                    .fillMaxSize()
-//                    .background(Color.Black))
-//            }
 
             when (viewModel.currentlyBeingEdited.value) {
                 SettingsValues.AppsView.AppsViewKeys.labelSize -> LabelTextPreview()
@@ -261,7 +256,15 @@ fun SettingsScreen(
                         AppsViewSettings(viewModel)
                     }
                     SettingsValues.SettingsTabType.Folders -> Box (Modifier.fillMaxSize()){
-                        FoldersSettings(viewModel.foldersPageState)
+                        FoldersSettings(
+                            state = viewModel.foldersPageState,
+                            upsertGroup = { old, new ->
+                                viewModel.addGroup(context, old = old, group = new)
+                            },
+                            deleteGroup = { groupDataEntity ->
+                                viewModel.deleteGroup(context, groupDataEntity)
+                            },
+                        )
                     }
                 }
             }

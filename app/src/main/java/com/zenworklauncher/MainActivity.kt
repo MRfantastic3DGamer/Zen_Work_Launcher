@@ -25,7 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import com.zenworklauncher.preffsDatabase.SettingsValues
+import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.screans.home.HomeViewModel
 import com.zenworklauncher.screans.home.presentation.HomeScreen
 import com.zenworklauncher.screans.settings.SettingsViewModel
