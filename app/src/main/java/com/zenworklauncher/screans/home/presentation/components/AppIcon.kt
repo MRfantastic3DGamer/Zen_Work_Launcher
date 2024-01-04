@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.dhruv.quick_apps.Action
 import com.zenworklauncher.database.preffs_database.SettingsValues
-import com.zenworklauncher.screans.home.model.AppData
+import com.zenworklauncher.model.AppData
 import com.zenworklauncher.utils.Outline
 
 @Composable

@@ -50,9 +50,6 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.screans.settings.SettingsViewModel
-import com.zenworklauncher.screans.settings.presentation.components.AppsViewSettings
-import com.zenworklauncher.screans.settings.presentation.components.FoldersSettings
-import com.zenworklauncher.screans.settings.presentation.components.MainSettings
 
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -224,11 +221,14 @@ fun SettingsScreen(
                     tabButton(text = "Main") {
                         selectedTab = SettingsValues.SettingsTabType.Main
                     }
-                    tabButton(text = "Apps View"){
-                        selectedTab = SettingsValues.SettingsTabType.AppsView
+                    tabButton(text = "Theme"){
+                        selectedTab = SettingsValues.SettingsTabType.Theme
                     }
                     tabButton(text = "Folders") {
                         selectedTab = SettingsValues.SettingsTabType.Folders
+                    }
+                    tabButton(text = "Apps") {
+                        selectedTab = SettingsValues.SettingsTabType.Apps
                     }
                 }
             )
@@ -252,11 +252,11 @@ fun SettingsScreen(
                     SettingsValues.SettingsTabType.Main -> Box (Modifier.fillMaxSize()){
                         MainSettings(viewModel)
                     }
-                    SettingsValues.SettingsTabType.AppsView -> Box (Modifier.fillMaxSize()){
-                        AppsViewSettings(viewModel)
+                    SettingsValues.SettingsTabType.Theme -> Box (Modifier.fillMaxSize()){
+                        ThemeSettings(viewModel)
                     }
                     SettingsValues.SettingsTabType.Folders -> Box (Modifier.fillMaxSize()){
-                        FoldersSettings(
+                        GroupsSettings(
                             state = viewModel.foldersPageState,
                             upsertGroup = { old, new ->
                                 viewModel.addGroup(context, old = old, group = new)
@@ -265,6 +265,10 @@ fun SettingsScreen(
                                 viewModel.deleteGroup(context, groupDataEntity)
                             },
                         )
+                    }
+
+                    SettingsValues.SettingsTabType.Apps -> Box (Modifier.fillMaxSize()){
+
                     }
                 }
             }

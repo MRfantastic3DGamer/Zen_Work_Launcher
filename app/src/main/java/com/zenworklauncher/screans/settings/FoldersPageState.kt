@@ -1,4 +1,4 @@
-package com.zenworklauncher.screans.settings.model
+package com.zenworklauncher.screans.settings
 
 import com.zenworklauncher.model.GroupDataEntity
 

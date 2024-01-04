@@ -1,4 +1,4 @@
-package com.zenworklauncher.screans.home.model
+package com.zenworklauncher.model
 
 import android.content.Context
 import android.content.Intent
@@ -15,7 +15,6 @@ data class AppData(
     @JvmField var OnSellect:(context: Context)->Unit = {},
 ) : Action(Name, OnSellect){
     init {
-
         OnSellect = { context ->
             context.startActivity(launchIntent)
         }

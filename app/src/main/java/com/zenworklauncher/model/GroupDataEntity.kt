@@ -9,5 +9,5 @@ data class GroupDataEntity(
     val id: Int? = null,
     val name: String,
     val animatedIconKey: String,
-    var packages: String
+    val color: String
 )

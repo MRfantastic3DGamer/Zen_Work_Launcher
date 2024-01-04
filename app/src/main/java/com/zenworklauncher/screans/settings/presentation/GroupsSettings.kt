@@ -1,4 +1,4 @@
-package com.zenworklauncher.screans.settings.presentation.components
+package com.zenworklauncher.screans.settings.presentation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,12 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import com.zenworklauncher.database.utils.Converters
 import com.zenworklauncher.model.GroupDataEntity
-import com.zenworklauncher.screans.settings.model.FoldersPageState
+import com.zenworklauncher.screans.settings.FoldersPageState
+import com.zenworklauncher.screans.settings.presentation.components.AppsGroupButton
+import com.zenworklauncher.screans.settings.presentation.components.SettingsHeading
 
 @Composable
-fun FoldersSettings(
+fun GroupsSettings(
     state: FoldersPageState,
     upsertGroup: (GroupDataEntity?, GroupDataEntity) -> Unit,
     deleteGroup: (GroupDataEntity)->Unit,
@@ -53,7 +54,6 @@ fun FoldersSettings(
                             GroupDataEntity(
                                 name = "new group",
                                 animatedIconKey = "",
-                                packages = Converters.listToString(listOf())
                             )
                         )
                     }),

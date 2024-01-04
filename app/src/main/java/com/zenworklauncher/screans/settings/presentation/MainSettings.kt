@@ -1,4 +1,4 @@
-package com.zenworklauncher.screans.settings.presentation.components
+package com.zenworklauncher.screans.settings.presentation
 
 import android.graphics.Bitmap
 import android.net.Uri
@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.screans.settings.SettingsViewModel
+import com.zenworklauncher.screans.settings.presentation.components.SettingsHeading
 
 @Composable
 fun MainSettings(viewModel: SettingsViewModel) {

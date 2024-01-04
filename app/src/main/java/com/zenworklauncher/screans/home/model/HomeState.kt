@@ -1,5 +1,7 @@
 package com.zenworklauncher.screans.home.model
 
+import com.zenworklauncher.model.AppData
+
 data class HomeState(
     val allAppsData: List<AppData>,
     var appSearchQuery: String,

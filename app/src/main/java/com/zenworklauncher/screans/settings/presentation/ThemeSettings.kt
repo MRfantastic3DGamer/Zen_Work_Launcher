@@ -1,4 +1,4 @@
-package com.zenworklauncher.screans.settings.presentation.components
+package com.zenworklauncher.screans.settings.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.screans.settings.SettingsViewModel
+import com.zenworklauncher.screans.settings.presentation.components.FloatEdit
+import com.zenworklauncher.screans.settings.presentation.components.SettingsHeading
 
 @Composable
-fun AppsViewSettings(viewModel: SettingsViewModel) {
+fun ThemeSettings(viewModel: SettingsViewModel) {
     val scrollState by remember { mutableStateOf(LazyListState()) }
     LazyColumn(
         modifier = Modifier,

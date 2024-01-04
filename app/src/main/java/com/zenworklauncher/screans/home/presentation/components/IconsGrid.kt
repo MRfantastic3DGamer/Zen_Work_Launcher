@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.zenworklauncher.screans.home.model.AppData
+import com.zenworklauncher.model.AppData
 
 @Composable
 fun IconsGrid (

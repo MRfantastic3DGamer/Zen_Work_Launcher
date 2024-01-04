@@ -10,7 +10,6 @@ import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.database.rooms_database.DatabaseProvider
 import com.zenworklauncher.model.GroupDataEntity
 import com.zenworklauncher.screans.home.HomeViewModel
-import com.zenworklauncher.screans.settings.model.FoldersPageState
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -59,12 +58,12 @@ class SettingsViewModel(
     }
 
     fun addGroup(context: Context, old: GroupDataEntity? = null, group: GroupDataEntity){
-        DatabaseProvider.addGroup(context, old, group)
+        DatabaseProvider.AddGroup(context, old, group)
         updateFoldersPageState()
     }
 
     fun deleteGroup(context: Context, group: GroupDataEntity){
-        DatabaseProvider.deleteGroup(context, group)
+        DatabaseProvider.DeleteGroup(context, group)
         updateFoldersPageState()
     }
 

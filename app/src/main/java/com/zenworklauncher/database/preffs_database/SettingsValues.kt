@@ -9,8 +9,9 @@ object SettingsValues{
 
     enum class SettingsTabType{
         Main,
-        AppsView,
+        Theme,
         Folders,
+        Apps
     }
 
     sealed class Main{

@@ -65,12 +65,12 @@ fun AppsGroupButton (
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "delete-group")
             }
         }
-        val packagesList = Converters.stringToList(data.packages)
+        val packagesList = Converters.stringToStringsList(data.packages)
         if (opened)
             packagesList.forEach { AppDataButton( name = it, delete = {
                 val newList = packagesList.toMutableList()
                 newList.remove(it)
-                data.packages = Converters.listToString(newList.toList())
+                data.packages = Converters.stringsListToString(newList.toList())
                 update(data)
             })
             }
@@ -89,7 +89,7 @@ fun AppsGroupButton (
                         val packageName = appsList[which].activityInfo.packageName
                         val newList = packagesList.toMutableList()
                         newList.add(packageName)
-                        val newData = data.copy( packages = Converters.listToString(newList.toList()) )
+                        val newData = data.copy( packages = Converters.stringsListToString(newList.toList()) )
                         update(newData)
                     }
                     .show()
