@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.dhruv.quick_apps.Action
 import com.zenworklauncher.database.preffs_database.SettingsValues
-import com.zenworklauncher.model.AppData
+import com.zenworklauncher.model.AppUIData
 import com.zenworklauncher.utils.Outline
 
 @Composable
@@ -29,7 +29,7 @@ fun AppIcon (action: Action, offset: IntOffset, selected: Boolean, iconSizeOffse
             .clip(CircleShape)
             .size(iconSize.dp)
             .paint(
-                (action as AppData).painter,
+                (action as AppUIData).painter,
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center,
             )
@@ -61,7 +61,7 @@ fun AppIcon (action: Action, iconSize: Float){
                 .clip(CircleShape)
                 .size(iconSize.dp)
                 .paint(
-                    (action as AppData).painter,
+                    (action as AppUIData).painter,
                     contentScale = ContentScale.Crop,
                     alignment = Alignment.Center,
                 )

@@ -1,23 +1,14 @@
 package com.zenworklauncher.model
 
-import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Immutable
 import com.dhruv.quick_apps.Action
 import com.example.launcher.Drawing.DrawablePainter
 
 @Immutable
-data class AppData(
+data class AppUIData(
     @JvmField val Name: String,
     val packageName: String,
     val painter: DrawablePainter,
     val launchIntent: Intent?,
-    @JvmField var OnSellect:(context: Context)->Unit = {},
-) : Action(Name, OnSellect){
-    init {
-        OnSellect = { context ->
-            context.startActivity(launchIntent)
-        }
-        super.onSelect = OnSellect
-    }
-}
+) : Action(Name){}

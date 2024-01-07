@@ -10,16 +10,11 @@ data class GroupsDataResult(
 
 @Immutable
 data class AppsDataResult(
-    val resultState             : DatabaseState,
-    val allAppsData              : List<AppData>,
-    val packageNameToAppDataMap : Map<String, Int>,
-    val firstLetterToAppDataMap : Map<String, List<Int>>,
-    val groupNameToAppDataMap   : Map<String, List<Int>>,
-)
-
-@Immutable
-data class AppsUsageDataResult(
-    val resultState             : DatabaseState,
-    val allAppsUsageData        : List<AppUsageDataEntity>,
-    val packageToAppUsageDataMap: Map<String, Int>
+    val resultState: DatabaseState,
+    val allAppsData: List<AppUIData>,
+    val packageNameToAppDataMap: Map<String, Int>,
+    val firstLetterToAppDataMap: Map<String, List<Int>>,
+    val groupNameToAppDataMap: Map<String, List<Int>>,
+    val allAppsUsageData: List<AppUsageDataEntity>,
+    val packageToAppUsageDataMap: Map<String, Int>,
 )

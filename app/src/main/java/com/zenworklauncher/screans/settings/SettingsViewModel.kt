@@ -8,6 +8,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.database.rooms_database.DatabaseProvider
+import com.zenworklauncher.model.AppUsageDataEntity
+import com.zenworklauncher.model.DatabaseState
 import com.zenworklauncher.model.GroupDataEntity
 import com.zenworklauncher.screans.home.HomeViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -27,10 +29,42 @@ class SettingsViewModel(
     var iconBorderSize by mutableStateOf(0.dp)
     var selectedIconBorderSize by mutableStateOf(0.dp)
 
-    var foldersPageState by mutableStateOf(FoldersPageState(folders = listOf()))
+    var foldersPageState by mutableStateOf(FoldersPageState(allGroups = listOf()))
+    var appsSettingsState by mutableStateOf(AppsSettingsState(listOf(), listOf(), listOf(), listOf()))
 
     var currentlyBeingEdited = mutableStateOf<SettingsValues.AppsView.AppsViewKeys?>(null)
     var shouldRebuildIconPositions = false
+
+    init {
+        DatabaseProvider.GetGroupResult.observeForever { state ->
+            if (state.resultState == DatabaseState.Ready){
+                foldersPageState = foldersPageState.copy(
+                    allGroups = state.allGroups
+                )
+                appsSettingsState = appsSettingsState.copy(
+                    allGroups = state.allGroups.map { it.name }
+                )
+            }
+        }
+        DatabaseProvider.GetAppsResult.observeForever { state ->
+            if (state.resultState == DatabaseState.Ready){
+                val apps = state.allAppsData.toMutableList()
+                apps.sortBy { it.Name }
+                val appsUsageData = mutableListOf<AppUsageDataEntity>()
+                apps.forEach {
+                    val i = state.packageToAppUsageDataMap[it.packageName]
+                    if (i != null){
+                        appsUsageData.add(state.allAppsUsageData[i])
+                    }
+                }
+                appsSettingsState = appsSettingsState.copy(
+                    allAppsUsageData = appsUsageData,
+                    icons = apps.map { it.painter }.toList(),
+                    names = apps.map { it.Name }.toList(),
+                )
+            }
+        }
+    }
 
     fun UpdateValues(){
 
@@ -57,19 +91,11 @@ class SettingsViewModel(
         }
     }
 
-    fun addGroup(context: Context, old: GroupDataEntity? = null, group: GroupDataEntity){
-        DatabaseProvider.AddGroup(context, old, group)
-        updateFoldersPageState()
+    fun addGroup(context: Context, group: GroupDataEntity){
+        DatabaseProvider.AddGroup(context, group)
     }
 
     fun deleteGroup(context: Context, group: GroupDataEntity){
         DatabaseProvider.DeleteGroup(context, group)
-        updateFoldersPageState()
-    }
-
-    private fun updateFoldersPageState(){
-        foldersPageState = foldersPageState.copy(
-            folders = DatabaseProvider.allGroups
-        )
     }
 }

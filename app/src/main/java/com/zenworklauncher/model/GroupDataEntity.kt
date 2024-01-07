@@ -8,6 +8,6 @@ data class GroupDataEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     val name: String,
-    val animatedIconKey: String,
-    val color: String
+    val animatedIconKey: String = "",
+    val color: String = ""
 )

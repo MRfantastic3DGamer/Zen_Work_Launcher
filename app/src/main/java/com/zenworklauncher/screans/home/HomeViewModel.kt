@@ -21,7 +21,7 @@ import com.dhruv.quick_apps.QuickAppsViewModel
 import com.zenworklauncher.database.preffs_database.SettingsValues
 import com.zenworklauncher.database.preffs_database.SettingsValues.AppsView.AppsViewKeys
 import com.zenworklauncher.database.rooms_database.DatabaseProvider
-import com.zenworklauncher.model.AppData
+import com.zenworklauncher.model.AppUIData
 import com.zenworklauncher.model.DatabaseState
 
 class HomeViewModel(
@@ -33,8 +33,8 @@ class HomeViewModel(
 
     var searching               by mutableStateOf(false)
     var appSearchQuery          by mutableStateOf("")
-    var searchedAppsData        by mutableStateOf(listOf<AppData>())
-    var allAppsData             by mutableStateOf(listOf<AppData>())
+    var searchedAppsData        by mutableStateOf(listOf<AppUIData>())
+    var allAppsData             by mutableStateOf(listOf<AppUIData>())
 
     val appWidgetHostViewsIDs = mutableStateListOf<Int>()
 
@@ -47,12 +47,16 @@ class HomeViewModel(
     ))
 
     init {
+        DatabaseProvider.initialize(packageManager, context)
         DatabaseProvider.GetAppsResult.observeForever { res ->
             if (res.resultState == DatabaseState.Ready){
                 allAppsData = res.allAppsData
                 quickAppsViewModel.onActionSelect = { context.startActivity(allAppsData[it].launchIntent) }
                 quickAppsViewModel.firstCharToActionsMap = res.firstLetterToAppDataMap
                 quickAppsViewModel.groupNameToActionsMap = res.groupNameToAppDataMap
+                quickAppsViewModel.markDirty()
+                quickAppsViewModel.handleIconsPositioningCalculations()
+                println("done generating positioning")
             }
         }
     }
@@ -105,7 +109,6 @@ class HomeViewModel(
     // endregion
 
     fun onTriggerPositioned (layoutCoordinates: LayoutCoordinates){
-        DatabaseProvider.initialize(packageManager, context)
         quickAppsViewModel.onTriggerGloballyPositioned(layoutCoordinates)
     }
 
@@ -138,7 +141,6 @@ class HomeViewModel(
             it.Name         .contains(v, ignoreCase = true) or
             it.packageName  .contains(v, ignoreCase = true)
         }
-        println(searchedAppsData.map { it.Name }.toList())
     }
 
     fun stopAppSearching (){

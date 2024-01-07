@@ -24,22 +24,22 @@ import com.zenworklauncher.screans.settings.presentation.components.SettingsHead
 @Composable
 fun GroupsSettings(
     state: FoldersPageState,
-    upsertGroup: (GroupDataEntity?, GroupDataEntity) -> Unit,
+    upsertGroup: (GroupDataEntity) -> Unit,
     deleteGroup: (GroupDataEntity)->Unit,
 ) {
     LazyColumn(
         Modifier
             .fillMaxSize(),
     ){
-        if (state.folders.isEmpty()){
+        if (state.allGroups.isEmpty()){
             item { SettingsHeading(text = "No folders created yet") }
         }
 
-        items(state.folders){
+        items(state.allGroups){
             AppsGroupButton(
                 data = it,
                 delete = { deleteGroup(it) },
-                update = { new -> upsertGroup(it, new) },
+                update = { new -> upsertGroup(new) },
             )
             Spacer(modifier = Modifier.height(10.dp))
         }
@@ -50,7 +50,6 @@ fun GroupsSettings(
                     .fillMaxWidth()
                     .clickable(onClickLabel = "add new group", role = Role.Button, onClick = {
                         upsertGroup(
-                            null,
                             GroupDataEntity(
                                 name = "new group",
                                 animatedIconKey = "",

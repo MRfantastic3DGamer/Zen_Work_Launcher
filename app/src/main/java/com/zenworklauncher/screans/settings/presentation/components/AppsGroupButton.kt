@@ -1,12 +1,9 @@
 package com.zenworklauncher.screans.settings.presentation.components
 
-import android.app.AlertDialog
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,7 +24,6 @@ import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import com.example.launcher.Drawing.DrawablePainter
-import com.zenworklauncher.database.utils.Converters
 import com.zenworklauncher.model.GroupDataEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,8 +42,6 @@ fun AppsGroupButton (
         Modifier
             .clickable {
                 opened = !opened
-                println("opened: $opened")
-                println(data.packages)
             }
     ){
         Row (
@@ -64,41 +58,6 @@ fun AppsGroupButton (
             IconButton(onClick = delete ) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "delete-group")
             }
-        }
-        val packagesList = Converters.stringToStringsList(data.packages)
-        if (opened)
-            packagesList.forEach { AppDataButton( name = it, delete = {
-                val newList = packagesList.toMutableList()
-                newList.remove(it)
-                data.packages = Converters.stringsListToString(newList.toList())
-                update(data)
-            })
-            }
-
-        Row (
-            Modifier.clickable {
-                val intent = Intent(Intent.ACTION_MAIN)
-                intent.addCategory(Intent.CATEGORY_LAUNCHER)
-                val pm = context.packageManager
-                val appsList = pm.queryIntentActivities(intent, 0)
-                val appNames = appsList.map { it.loadLabel(pm).toString() }.toTypedArray()
-
-                AlertDialog.Builder(context)
-                    .setTitle("Select an app")
-                    .setItems(appNames) { dialog, which ->
-                        val packageName = appsList[which].activityInfo.packageName
-                        val newList = packagesList.toMutableList()
-                        newList.add(packageName)
-                        val newData = data.copy( packages = Converters.stringsListToString(newList.toList()) )
-                        update(newData)
-                    }
-                    .show()
-            }
-        ){
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "add-new-app"
-            )
         }
     }
 }

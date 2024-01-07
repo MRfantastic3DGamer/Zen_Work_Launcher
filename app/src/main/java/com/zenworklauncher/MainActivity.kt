@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import com.zenworklauncher.database.preffs_database.SettingsValues
+import com.zenworklauncher.database.rooms_database.DatabaseProvider
 import com.zenworklauncher.screans.home.HomeViewModel
 import com.zenworklauncher.screans.home.presentation.HomeScreen
 import com.zenworklauncher.screans.settings.SettingsViewModel
@@ -45,6 +46,9 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { res -> println(res) }
         super.onStart()
+        pm = packageManager
+        context = this
+        DatabaseProvider.initialize(pm, context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

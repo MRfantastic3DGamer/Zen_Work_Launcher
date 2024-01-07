@@ -258,8 +258,8 @@ fun SettingsScreen(
                     SettingsValues.SettingsTabType.Folders -> Box (Modifier.fillMaxSize()){
                         GroupsSettings(
                             state = viewModel.foldersPageState,
-                            upsertGroup = { old, new ->
-                                viewModel.addGroup(context, old = old, group = new)
+                            upsertGroup = { new ->
+                                viewModel.addGroup(context, group = new)
                             },
                             deleteGroup = { groupDataEntity ->
                                 viewModel.deleteGroup(context, groupDataEntity)
@@ -268,7 +268,7 @@ fun SettingsScreen(
                     }
 
                     SettingsValues.SettingsTabType.Apps -> Box (Modifier.fillMaxSize()){
-
+                        AppsSettings(modifier = Modifier, state = viewModel.appsSettingsState)
                     }
                 }
             }

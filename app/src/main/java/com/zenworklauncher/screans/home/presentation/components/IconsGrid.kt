@@ -12,17 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.zenworklauncher.model.AppData
+import com.zenworklauncher.model.AppUIData
 
 @Composable
 fun IconsGrid (
     modifier: Modifier = Modifier,
     numberOfColumns: Int,
-    apps: List<AppData>,
+    apps: List<AppUIData>,
     iconSize: Float,
 ){
     val context = LocalContext.current
-    println(apps)
     LazyVerticalGrid(
         modifier = modifier
             .background(Color.Black)
@@ -31,7 +30,7 @@ fun IconsGrid (
         contentPadding = PaddingValues(10.dp),
         reverseLayout = true,
     ){
-        items(apps){ app ->
+        items(apps, key = {it.packageName}){ app ->
             IconButton(
                 modifier = Modifier.padding(horizontal = 0.dp, vertical = 10.dp),
                 onClick = { context.startActivity(app.launchIntent) }
